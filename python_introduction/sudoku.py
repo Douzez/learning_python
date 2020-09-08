@@ -13,22 +13,18 @@ board = [[5, 3, 0, 0, 7, 0, 0, 0, 0],
 
 def print_board(the_board):
     print('    0 1 2   3 4 5   6 7 8')
-    print('  -------------------------')
-    for idx_r, row in enumerate(board):
-        print(idx_r, end=' ')
-        for idx_n, num in enumerate(row):
-            if idx_n == 0 or idx_n == 3 or idx_n == 6:
-                print('| ', end='')
-            if num == 0:
-                print(' ', end=' ')
-            else:
-                print(num, end=' ')
-            if idx_n == 8:
-                print('|', end='')
-        print()
-        if idx_r == 2 or idx_r == 5:
-            print('  -------------------------')
-    print('  -------------------------')
+    line = '  ' + '-' * 25
+    for r in range(len(board)):
+        if r % 3 == 0:
+            print(line)
+        row_to_print = str(r)
+        for c in range(len(the_board[0])):
+            if c % 3 == 0:
+                row_to_print += " |"
+            row_to_print += ' ' + str(the_board[r][c]) if the_board[r][c] > 0 else '  '
+        row_to_print += ' |'
+        print(row_to_print)
+    print(line)
 
 
 print_board(board)
