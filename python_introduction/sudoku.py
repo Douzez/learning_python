@@ -66,29 +66,26 @@ def is_valid(the_board, the_row, the_col, value):
     if value in the_board[the_row]:
         return False
 
-    # Validate Value not in Column i
-    col = []
+    # Validate Value not in Column
     for row in the_board:
-        col.append(row[the_col])
-    if value in col:
-        return False
+        if value == row[the_col]:
+            return False
 
     # Validate Value in 3x3 Grid
-    for row in range(0, 9, 3): # rows 0 - 3 - 6
-        for col in range(0, 9, 3): # cols 0 - 3 - 6
-            # range(row/col, (row/col + 3))   0, 1, 2  -  3, 4, 5  -  6, 7, 9
-            if the_row in range(row, (row + 3)) and the_col in range(col, (col + 3)):
-                for r in range(row, (row + 3)):
-                    for c in range(col, (col + 3)):
-                        if value == board[r][c]:
-                            return False
+    row = the_row // 3
+    col = the_col // 3
+    for r in range(3):
+        for c in range(3):
+            if the_board[(3 * row) + r][(3 * col) + c] == value:
+                return False
 
     return True
 
 row_col = find_zero(board)
 print(is_valid(board, row_col[0], row_col[1], 7))  # False  7 is in the row
-print(is_valid(board, row_col[0], row_col[1], 8))  # False  8 is in the column
+print(is_valid(board, 7, 5, 9))                    # False  8 is in the column
 print(is_valid(board, row_col[0], row_col[1], 9))  # False  9 is in the 3x3 Grid
-print(is_valid(board, row_col[0], row_col[1], 4))  # True   4 is not in the row nor col nor 3x3 grid
-print(is_valid(board, 8, 6, 1), end='')  # True   1 is not in the row nor col nor 3x3 grid
-print(is_valid(board, 8, 6, 5))  # False  5 is in the row nor col nor 3x3 grid
+
+print(is_valid(board, 8, 6, 1))                    # True   1 is not in the row nor col nor 3x3 grid
+print(is_valid(board, 8, 6, 5))                    # False  5 is in the row nor col nor 3x3 grid
+print(is_valid(board, row_col[0], row_col[1], 4))  # True   4 is not in the row nor col nor 3x3 grid 
