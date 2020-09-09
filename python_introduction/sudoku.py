@@ -36,10 +36,10 @@ The output of that function should be at list of size 2.
 """
 def find_zero(the_board):
     # return [0, 2] ==> row, col
-    for index_row, row in enumerate(the_board):
-        for index_col, col in enumerate(the_board):
-            if the_board[index_row][index_col] == 0:
-                return [index_row, index_col]
+    for row in range(len(the_board)):
+        for col in range(len(the_board[row])):
+            if the_board[row][col] == 0:
+                return [row, col]
     return []
 
 print(find_zero(board))
