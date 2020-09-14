@@ -21,7 +21,7 @@ def print_board(board):
 
 
 def clear_screen():
-    system('clear')
+    # system('clear')
     print('\n       >>> TIC-TAC-TOE <<< ')
     print_players = []
     for k, v in players_choices.items():
@@ -112,8 +112,72 @@ def move_cpu():
             enemy_positions.append(position)
     
     move = None
+    # 2. Go for this player positions and check for possible win moves
+    not_empty_positions = enemy_positions + this_positions
+    empty_positions = []
+    for i in range(1, 10):
+        if i not in not_empty_positions:
+            empty_positions.append(i)
+
+    print('this_positions ' + str(this_positions))
+    print('empty_positions ' + str(empty_positions))
+    # Check for two positions only and make it a winner
+    if 1 in this_positions and 2 in this_positions and 3 in empty_positions:
+        move = 3
+    elif 1 in this_positions and 3 in this_positions and 2 in empty_positions:
+        move = 2
+    elif 1 in this_positions and 5 in this_positions and 9 in empty_positions:
+        move = 9
+    elif 1 in this_positions and 9 in this_positions and 5 in empty_positions:
+        move = 5
+    elif 1 in this_positions and 4 in this_positions and 7 in empty_positions:
+        move = 7
+    elif 1 in this_positions and 7 in this_positions and 4 in empty_positions:
+        move = 4
+        
+    elif 2 in this_positions and 3 in this_positions and 1 in empty_positions:
+        move = 1
+    elif 2 in this_positions and 5 in this_positions and 8 in empty_positions:
+        move = 8
+
+    elif 3 in this_positions and 5 in this_positions and 7 in empty_positions:
+        move = 7
+    elif 3 in this_positions and 7 in this_positions and 5 in empty_positions:
+        move = 5
+    elif 3 in this_positions and 6 in this_positions and 9 in empty_positions:
+        move = 9
+    elif 3 in this_positions and 9 in this_positions and 6 in empty_positions:
+        move = 6
+
+    elif 4 in this_positions and 7 in this_positions and 1 in empty_positions:
+        move = 1
+    elif 4 in this_positions and 5 in this_positions and 6 in empty_positions:
+        move = 6
+    elif 4 in this_positions and 6 in this_positions and 5 in empty_positions:
+        move = 5
+        
+    elif 5 in this_positions and 8 in this_positions and 2 in empty_positions:
+        move = 2
+    elif 5 in this_positions and 6 in this_positions and 4 in empty_positions:
+        move = 4
+    elif 5 in this_positions and 9 in this_positions and 1 in empty_positions:
+        move = 1
+    elif 5 in this_positions and 7 in this_positions and 3 in empty_positions:
+        move = 3
+
+    elif 6 in this_positions and 9 in this_positions and 3 in empty_positions:
+        move = 3
+
+    elif 7 in this_positions and 8 in this_positions and 9 in empty_positions:
+        move = 9
+    elif 7 in this_positions and 9 in this_positions and 8 in empty_positions:
+        move = 8
+        # 8 and 9 are already included in the other conditions
+
+    print('after cpu 2 - move: ' + str(move))
+    print('enemy_positions: ' + str(enemy_positions))
     # 1. Go through enemy positions and return position to block possible win moves
-    if len(enemy_positions) >= 2:
+    if move == None and len(enemy_positions) >= 2:
         if 1 in enemy_positions:
             if 4 in enemy_positions:
                 move = 7
@@ -219,7 +283,8 @@ def move_cpu():
                 move = 5
             elif 5 in enemy_positions:
                 move = 1
-
+    print('after enemy - move: ' + str(move))
+    
     # if. position a move if there's one (enemy) or 0 (means the cpu goes first) positions
     if move == None and move not in this_positions: # not this_positions = empty list
         best_moves = [1, 7, 5, 3, 9]
@@ -227,14 +292,8 @@ def move_cpu():
         if the_board[move] != ' ':
             best_moves.remove(move)
             move = best_moves[randint(0, len(best_moves) - 1)]
-
-    # 2. Go for this player positions and check for possible win moves
-    not_empty_positions = enemy_positions + this_positions
-    empty_positions = []
-    for i in range(1, 10):
-        if i not in not_empty_positions:
-            empty_positions.append(i)
-
+    print('first cpu move, best moves - move: ' + str(move))
+    
     # check for empty positions and map it againts this_positions, then decide which spot 
     if move == None:
         # Check for one position only
@@ -255,65 +314,13 @@ def move_cpu():
         elif 8 in this_positions and 1 not in empty_positions:
             move = 1
         elif 9 in this_positions and 2 not in empty_positions:
-            move = 2
-    
-    if move == None:
-        # Check for two positions only and make it a winner
-        if 1 in this_positions and 2 in this_positions and 3 in empty_positions:
-            move = 3
-        elif 1 in this_positions and 3 in this_positions and 2 in empty_positions:
-            move = 2
-        elif 1 in this_positions and 5 in this_positions and 9 in empty_positions:
-            move = 9
-        elif 1 in this_positions and 9 in this_positions and 5 in empty_positions:
-            move = 5
-        elif 1 in this_positions and 4 in this_positions and 7 in empty_positions:
-            move = 7
-        elif 1 in this_positions and 7 in this_positions and 4 in empty_positions:
-            move = 4
-        
-        elif 2 in this_positions and 3 in this_positions and 1 in empty_positions:
-            move = 1
-        elif 2 in this_positions and 5 in this_positions and 8 in empty_positions:
-            move = 8
-
-        elif 3 in this_positions and 5 in this_positions and 7 in empty_positions:
-            move = 7
-        elif 3 in this_positions and 7 in this_positions and 5 in empty_positions:
-            move = 5
-        elif 3 in this_positions and 6 in this_positions and 9 in empty_positions:
-            move = 9
-        elif 3 in this_positions and 9 in this_positions and 6 in empty_positions:
-            move = 6
-
-        elif 4 in this_positions and 7 in this_positions and 1 in empty_positions:
-            move = 1
-        elif 4 in this_positions and 5 in this_positions and 6 in empty_positions:
-            move = 6
-        elif 4 in this_positions and 6 in this_positions and 5 in empty_positions:
-            move = 5
-        
-        elif 5 in this_positions and 8 in this_positions and 2 in empty_positions:
-            move = 2
-        elif 5 in this_positions and 6 in this_positions and 4 in empty_positions:
-            move = 4
-        elif 5 in this_positions and 9 in this_positions and 1 in empty_positions:
-            move = 1
-        elif 5 in this_positions and 7 in this_positions and 3 in empty_positions:
-            move = 3
-
-        elif 6 in this_positions and 9 in this_positions and 3 in empty_positions:
-            move = 3
-
-        elif 7 in this_positions and 8 in this_positions and 9 in empty_positions:
-            move = 9
-        elif 7 in this_positions and 9 in this_positions and 8 in empty_positions:
-            move = 8
-            
-        # 8 and 9 are already included in the other conditions
-            
+            move = 2        
+    print('after cpu simple - move: ' + str(move))      
     # At the end Check if move is only in an empty position, 
     # if not get empty positions (!= not_empty_positions) and set move to one of those empty positions
+    # check possible wins after enemy positions are not dangerous, for example: 
+    # this_positions [4, 5] and enemy_positions[1, 6, 7] and empty_postions[2, 3, 8, 9], pick the best which is 2 or 5; 
+    # not random from empty positions.
     if move in not_empty_positions or move == None:
         move = empty_positions[randint(0, len(empty_positions) - 1)]
     """
@@ -329,6 +336,9 @@ def validate_number_input():
     while True:
         try:
             move = int(input())
+            while move < 1 or move > 9:
+                print("Not a valid number, pick anumber between 1-9.")
+                move = int(input())
         except ValueError:
             print('Not a valid number. Try again!')
             continue
@@ -387,10 +397,10 @@ def empty_spaces():
 
 
 def play_again():
-    print('Want to play again: (Y - N)', end='')
+    print('Want to play again: (Y - N) ', end='')
     continue_playing = input().upper()
     while continue_playing not in ['Y', 'N']:
-        print('Invalid choice, play again? (Y - N)')
+        print('Invalid choice, play again? (Y - N) ', end='')
         continue_playing = input().upper()
             
     if continue_playing == 'Y':
@@ -423,7 +433,8 @@ def game_on():
             # set the position
             move = set_space(selection)
         else:
-            print('\n>>>> There is a TIE! <<<<' )
+            sleep(1)
+            print('\n>>>>> There is a TIE! <<<<<' )
             keep_playing = play_again()
 
         # Check winner
