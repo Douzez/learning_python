@@ -6,7 +6,7 @@ the_board = {1: ' ', 2: ' ', 3: ' ',
              4: ' ', 5: ' ', 6: ' ',
              7: ' ', 8: ' ', 9: ' '}
 
-turns = {'X': '', 'O': ''}  # H or C
+players_choices = {'X': '', 'O': ''}  # H or C
 
 
 def print_board(board):
@@ -22,12 +22,15 @@ def print_board(board):
 
 def clear_screen():
     system('clear')
-    print('\n>>> TIC-TAC-TOE. > ', end='')
-    for k, v in turns.items():
+    print('\n       >>> TIC-TAC-TOE <<< ')
+    print_players = []
+    for k, v in players_choices.items():
         if v == 'H':
-            print(k + ': Human', end=' ')
+            print_players.insert(0, '        Human: ' + k + '   ')
         elif v == 'C':
-            print(k + ': CPU', end=' ')
+            print_players.append('CPU: ' + k)
+    for player in print_players:
+        print(player, end='')
     print('\n')
 
 
@@ -95,95 +98,343 @@ def is_winner(move, turn):
     return False
 
 
-def ok_turn(turn):
-    if turn == 'X' or turn == 'O':
-        return False
-    else:
-        return True
+def move_cpu():
+    enemy_positions = []
+    this_positions = []
 
+    # Get positions for the enemy and this player
+    for position, figure in the_board.items():
+        if figure == ' ':
+            continue
+        if players_choices[figure] == 'C':
+            this_positions.append(position)
+        elif players_choices[figure] == 'H':
+            enemy_positions.append(position)
+    
+    move = None
+    # 1. Go through enemy positions and return position to block possible win moves
+    if len(enemy_positions) >= 2:
+        if 1 in enemy_positions:
+            if 4 in enemy_positions:
+                move = 7
+            elif 7 in enemy_positions:
+                move = 4
+            elif 5 in enemy_positions:
+                move = 9
+            elif 9 in enemy_positions:
+                move = 5
+            elif 2 in enemy_positions:
+                move = 3
+            elif 3 in enemy_positions:
+                move = 2
+        elif 2 in enemy_positions:
+            if 1 in enemy_positions:
+                move = 3
+            elif 3 in enemy_positions:
+                move = 1
+            elif 5 in enemy_positions:
+                move = 8
+        elif 3 in enemy_positions:
+            if 1 in enemy_positions:
+                move = 2
+            elif 2 in enemy_positions:
+                move = 1
+            elif 5 in enemy_positions:
+                move = 8
+            elif 9 in enemy_positions:
+                move = 6
+            elif 6 in enemy_positions:
+                move = 9
+            elif 5 in enemy_positions:
+                move = 7
+            elif 7 in enemy_positions:
+                move = 5
+        elif 4 in enemy_positions:
+            if 1 in enemy_positions:
+                move = 7
+            elif 7 in enemy_positions:
+                move = 1
+            elif 5 in enemy_positions:
+                move = 6
+            elif 6 in enemy_positions:
+                move = 5
+        elif 5 in enemy_positions:
+            if 2 in enemy_positions:
+                move = 8
+            elif 8 in enemy_positions:
+                move = 2
+            elif 4 in enemy_positions:
+                move = 6
+            elif 6 in enemy_positions:
+                move = 4
+            elif 1 in enemy_positions:
+                move = 9
+            elif 9 in enemy_positions:
+                move = 1
+            elif 3 in enemy_positions:
+                move = 7
+            elif 7 in enemy_positions:
+                move = 3
+        elif 6 in enemy_positions:
+            if 3 in enemy_positions:
+                move = 9
+            elif 9 in enemy_positions:
+                move = 3
+            elif 5 in enemy_positions:
+                move = 4
+            elif 4 in enemy_positions:
+                move = 5
+        elif 7 in enemy_positions:
+            if 1 in enemy_positions:
+                move = 4
+            elif 4 in enemy_positions:
+                move = 1
+            elif 5 in enemy_positions:
+                move = 3
+            elif 3 in enemy_positions:
+                move = 5
+            elif 8 in enemy_positions:
+                move = 9
+            elif 9 in enemy_positions:
+                move = 8
+        elif 8 in enemy_positions:
+            if 5 in enemy_positions:
+                move = 2
+            elif 2 in enemy_positions:
+                move = 5
+            elif 7 in enemy_positions:
+                move = 9
+            elif 9 in enemy_positions:
+                move = 7
+        elif 9 in enemy_positions:
+            if 3 in enemy_positions:
+                move = 6
+            elif 6 in enemy_positions:
+                move = 3
+            elif 7 in enemy_positions:
+                move = 8
+            elif 8 in enemy_positions:
+                move = 7
+            elif 1 in enemy_positions:
+                move = 5
+            elif 5 in enemy_positions:
+                move = 1
 
-def get_move(turn):
-    move = ''
-    if turns[turn] == 'H':
-        move = int(input())
-        while the_board[move] != ' ' or the_board[move] != ' ':
-            print('***> Position is not empty. Choose another position: ')
+    # if. position a move if there's one (enemy) or 0 (means the cpu goes first) positions
+    if move == None and move not in this_positions: # not this_positions = empty list
+        best_moves = [1, 7, 5, 3, 9]
+        move = best_moves[randint(0, len(best_moves) - 1)]
+        if the_board[move] != ' ':
+            best_moves.remove(move)
+            move = best_moves[randint(0, len(best_moves) - 1)]
+
+    # 2. Go for this player positions and check for possible win moves
+    not_empty_positions = enemy_positions + this_positions
+    empty_positions = []
+    for i in range(1, 10):
+        if i not in not_empty_positions:
+            empty_positions.append(i)
+
+    # check for empty positions and map it againts this_positions, then decide which spot 
+    if move == None:
+        # Check for one position only
+        if 1 in this_positions and 8 not in empty_positions:
+            move = 8
+        elif 2 in this_positions and 9 not in empty_positions:
+            move = 9
+        elif 3 in this_positions and 8 not in empty_positions:
+            move = 8
+        elif 4 in this_positions and 3 not in empty_positions:
+            move = 3
+        elif 5 in this_positions and 6 not in empty_positions:
+            move = 6
+        elif 6 in this_positions and 1 not in empty_positions:
+            move = 1
+        elif 7 in this_positions and 3 not in empty_positions:
+            move = 3
+        elif 8 in this_positions and 1 not in empty_positions:
+            move = 1
+        elif 9 in this_positions and 2 not in empty_positions:
+            move = 2
+    
+    if move == None:
+        # Check for two positions only and make it a winner
+        if 1 in this_positions and 2 in this_positions and 3 in empty_positions:
+            move = 3
+        elif 1 in this_positions and 3 in this_positions and 2 in empty_positions:
+            move = 2
+        elif 1 in this_positions and 5 in this_positions and 9 in empty_positions:
+            move = 9
+        elif 1 in this_positions and 9 in this_positions and 5 in empty_positions:
+            move = 5
+        elif 1 in this_positions and 4 in this_positions and 7 in empty_positions:
+            move = 7
+        elif 1 in this_positions and 7 in this_positions and 4 in empty_positions:
+            move = 4
+        
+        elif 2 in this_positions and 3 in this_positions and 1 in empty_positions:
+            move = 1
+        elif 2 in this_positions and 5 in this_positions and 8 in empty_positions:
+            move = 8
+
+        elif 3 in this_positions and 5 in this_positions and 7 in empty_positions:
+            move = 7
+        elif 3 in this_positions and 7 in this_positions and 5 in empty_positions:
+            move = 5
+        elif 3 in this_positions and 6 in this_positions and 9 in empty_positions:
+            move = 9
+        elif 3 in this_positions and 9 in this_positions and 6 in empty_positions:
+            move = 6
+
+        elif 4 in this_positions and 7 in this_positions and 1 in empty_positions:
+            move = 1
+        elif 4 in this_positions and 5 in this_positions and 6 in empty_positions:
+            move = 6
+        elif 4 in this_positions and 6 in this_positions and 5 in empty_positions:
+            move = 5
+        
+        elif 5 in this_positions and 8 in this_positions and 2 in empty_positions:
+            move = 2
+        elif 5 in this_positions and 6 in this_positions and 4 in empty_positions:
+            move = 4
+        elif 5 in this_positions and 9 in this_positions and 1 in empty_positions:
+            move = 1
+        elif 5 in this_positions and 7 in this_positions and 3 in empty_positions:
+            move = 3
+
+        elif 6 in this_positions and 9 in this_positions and 3 in empty_positions:
+            move = 3
+
+        elif 7 in this_positions and 8 in this_positions and 9 in empty_positions:
+            move = 9
+        elif 7 in this_positions and 9 in this_positions and 8 in empty_positions:
+            move = 8
+            
+        # 8 and 9 are already included in the other conditions
+            
+    # At the end Check if move is only in an empty position, 
+    # if not get empty positions (!= not_empty_positions) and set move to one of those empty positions
+    if move in not_empty_positions or move == None:
+        move = empty_positions[randint(0, len(empty_positions) - 1)]
+    """
+    {1: ' ', 2: ' ', 3: 'X',
+     4: ' ', 5: 'O', 6: ' ',
+     7: ' ', 8: 'X', 9: ' '}  
+    """
+    
+    return move
+
+    
+def validate_number_input():
+    while True:
+        try:
             move = int(input())
-    elif turns[turn] == 'C':
-        # TODO 1st check empty spaces and randomly pick an empty space
-        # TODO 2nd check adversary spaces and if it's about to win, pick that place
-        empty_spaces = []
-        for space, move in the_board.items():
-            if move == ' ':
-                empty_spaces.append(space)
-        move = empty_spaces[randint(0, len(empty_spaces) - 1)]
-        empty_spaces.clear()
+        except ValueError:
+            print('Not a valid number. Try again!')
+            continue
+        else:
+            while the_board[move] != ' ':
+                print('***> Position is not empty. Choose another position: ')
+                move = validate_number_input()
+            return move
+
+
+def set_space(selection):
+    print('Turn for ' + selection + '. Move on which space?')
+    move = 1
+    if players_choices[selection] == 'H':
+        move = validate_number_input()
+    elif players_choices[selection] == 'C':
+        sleep(2)
+        move = move_cpu()  # TODO check adversary spaces and if it's about to win, pick that place
         print(move)
         sleep(2)
-
+    
+    the_board[move] = selection
     return move
 
 
-def get_turn():
-    print('>>> Picking who goes first!')
+def select_player_turns():
+    
+    print('===> Picking first player... ')
     sleep(2)
-    if randint(0, 9) >= 5:
-        print('CPU picks letter')
-        if randint(0, 1) == 0:
-            turn = 'X'
-            turns[turn] = 'C'
-            turns['O'] = 'H'
-        else:
-            turn = 'O'
-            turns[turn] = 'C'
-            turns['X'] = 'H'
-        print('CPU picked ' + turn)
-        sleep(4)
-    else:
+    cpu_turn = randint(0,9) > 4
+    if cpu_turn: # CPU
+        selection = 'X' if randint(0,9) > 4 else 'O'
+        for key in players_choices.keys():
+            players_choices[key] = 'C' if key == selection else 'H'
+        print('>>> CPU picks: ' + selection)
+        sleep(2)
+    else: # Human
         print('>>> Human picks!')
-        print('===> Select Letter (X or O -non zero-)')
-        turn = input()
-        while ok_turn(turn):
-            print('***> Select correct LETTER X-O')
-            turn = input()
-        if turn == 'X':
-            turns[turn] = 'H'
-            turns['O'] = 'C'
-        elif turn == 'O':
-            turns[turn] = 'H'
-            turns['X'] = 'C'
-    return turn
+        print('===> Select Letter (X or O - not ZERO -)')
+        selection = input().upper()
+        while selection not in  ['X', 'O']:
+            print('***> SELECT correct LETTER (X - O)')
+            selection = input().upper()
+        for key in players_choices.keys():
+            players_choices[key] = 'H' if key == selection else 'C'
+    
+    return selection
 
 
-def start():
+def empty_spaces():
+    empty_positions = []
+    for position in the_board:
+        if the_board[position] == ' ':
+            empty_positions.append(position)
+    return empty_positions
+
+
+def play_again():
+    print('Want to play again: (Y - N)', end='')
+    continue_playing = input().upper()
+    while continue_playing not in ['Y', 'N']:
+        print('Invalid choice, play again? (Y - N)')
+        continue_playing = input().upper()
+            
+    if continue_playing == 'Y':
+        for position in the_board:
+            the_board[position] = ' '
+        return True
+    else:
+        return False
+
+
+def welcome():
     clear_screen()
     print('*************************************')
     print('**** Welcome to TIC-TAC-TOE game ****')
     print('*************************************\n')
 
-    # Select Player vs CPU. Who will go first?
-    turn = get_turn()
 
-    for i in range(9):
+def game_on():
+    welcome()
+    # Select Player vs CPU. Who will go first?
+    selection = select_player_turns()
+
+    keep_playing = True
+
+    while keep_playing:
         clear_screen()
         print_board(the_board)
-        print('Turn for ' + turn + '. Move on which space?')
 
-        # set the position
-        move = get_move(turn)
-        the_board[move] = turn
+        if empty_spaces():
+            # set the position
+            move = set_space(selection)
+        else:
+            print('\n>>>> There is a TIE! <<<<' )
+            keep_playing = play_again()
 
         # Check winner
-        if is_winner(move, turn):
+        if is_winner(move, selection):
             clear_screen()
             print_board(the_board)
-            print('\n******* The winner is ' + turn + ' *******')
-            break
+            print('\n******* The winner is ' + selection + ' *******')
+            keep_playing = play_again()
 
-        if turn == 'X':
-            turn = 'O'
-        else:
-            turn = 'X'
+        # Change selection
+        selection = 'O' if selection == 'X' else 'X'
 
 
-start()
+game_on()

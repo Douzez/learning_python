@@ -127,8 +127,7 @@ def solve(the_board):
     for i in range(1, 10):
         if is_valid(the_board, row, col, i):
             the_board[row][col] = i
-            print_board(the_board)
-
+            # print_board(the_board)
             solution = solve(the_board)
             if solution is not None:
                 return solution
