@@ -21,7 +21,7 @@ def print_board(board):
 
 
 def clear_screen():
-    # system('clear')
+    system('clear')
     print('\n       >>> TIC-TAC-TOE <<< ')
     print_players = []
     for k, v in players_choices.items():
@@ -119,8 +119,8 @@ def move_cpu():
         if i not in not_empty_positions:
             empty_positions.append(i)
 
-    print('this_positions ' + str(this_positions))
-    print('empty_positions ' + str(empty_positions))
+    # print('this_positions ' + str(this_positions))
+    # print('empty_positions ' + str(empty_positions))
     # Check for two positions only and make it a winner
     if 1 in this_positions and 2 in this_positions and 3 in empty_positions:
         move = 3
@@ -174,8 +174,8 @@ def move_cpu():
         move = 8
         # 8 and 9 are already included in the other conditions
 
-    print('after cpu 2 - move: ' + str(move))
-    print('enemy_positions: ' + str(enemy_positions))
+    # print('after cpu 2 - move: ' + str(move))
+    # print('enemy_positions: ' + str(enemy_positions))
     # 1. Go through enemy positions and return position to block possible win moves
     if move == None and len(enemy_positions) >= 2:
         if 1 in enemy_positions:
@@ -283,7 +283,7 @@ def move_cpu():
                 move = 5
             elif 5 in enemy_positions:
                 move = 1
-    print('after enemy - move: ' + str(move))
+    # print('after enemy - move: ' + str(move))
     
     # if. position a move if there's one (enemy) or 0 (means the cpu goes first) positions
     if move == None and move not in this_positions: # not this_positions = empty list
@@ -292,7 +292,7 @@ def move_cpu():
         if the_board[move] != ' ':
             best_moves.remove(move)
             move = best_moves[randint(0, len(best_moves) - 1)]
-    print('first cpu move, best moves - move: ' + str(move))
+    # print('first cpu move, best moves - move: ' + str(move))
     
     # check for empty positions and map it againts this_positions, then decide which spot 
     if move == None:
@@ -315,7 +315,7 @@ def move_cpu():
             move = 1
         elif 9 in this_positions and 2 not in empty_positions:
             move = 2        
-    print('after cpu simple - move: ' + str(move))      
+    # print('after cpu simple - move: ' + str(move))      
     # At the end Check if move is only in an empty position, 
     # if not get empty positions (!= not_empty_positions) and set move to one of those empty positions
     # check possible wins after enemy positions are not dangerous, for example: 
